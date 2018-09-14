@@ -7,9 +7,11 @@
 
 
 ## Run the file
-'''python
-python detect_lanes_video.py
-'''
+
+```console
+terminal@linux:~$ python detect_lanes_video.py
+```
+
 
 
 ## Demo
@@ -18,3 +20,9 @@ python detect_lanes_video.py
 
 ## Screenshot
 ![Output](img.png)
+
+
+```console
+foo@bar:~$ whoami
+foo
+```
