@@ -22,7 +22,3 @@ terminal@linux:~$ python detect_lanes_video.py
 ![Output](img.png)
 
 
-```console
-foo@bar:~$ whoami
-foo
-```
