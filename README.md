@@ -7,7 +7,7 @@
 
 
 ## Run the file
-'''
+'''python
 python detect_lanes_video.py
 '''
 
