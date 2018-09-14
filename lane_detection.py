@@ -14,7 +14,6 @@ class DetectLane:
     def __init__(self,):
         pass
 
-
     def draw_lines(self,img, lines, color=[0, 0, 255], thickness=10):
         global pre_left_m, pre_left_b, pre_right_m, pre_right_b
         prev_ratio = 0.0
@@ -25,7 +24,6 @@ class DetectLane:
 
         left_y_min = img.shape[0]
         right_y_min = img.shape[0]
-
 
         if lines is not None:
             for line in lines:
@@ -49,51 +47,38 @@ class DetectLane:
                         right_b.append(b)
 
             if (len(left_m) > 0):
-                # Get the average slope and intercept
                 left_avg_m = np.mean(left_m)
                 left_avg_b = np.mean(left_b)
-                # Temporal smoothing
                 if (pre_left_m is not None):
                     left_avg_m = prev_ratio * pre_left_m + (1 - prev_ratio) * left_avg_m
                     left_avg_b = prev_ratio * pre_left_b + (1 - prev_ratio) * left_avg_b
-                # Get the x value for the top point
                 left_x_min = (img.shape[0] * 3 / 5 - left_avg_b) / left_avg_m
-                # Get the x value for the bottom point (draw all the way to bottom)
                 left_x_max = (img.shape[0] - left_avg_b) / left_avg_m
-                # Draw the left line
                 cv2.line(img, (int(left_x_min), int(img.shape[0] * 3 / 5)),
                          (int(left_x_max), img.shape[0]), color, thickness)
                 pre_left_m = left_avg_m
                 pre_left_b = left_avg_b
 
             if (len(right_m) > 0):
-                # Get the average slope and intercept
                 right_avg_m = np.mean(right_m)
                 right_avg_b = np.mean(right_b)
-                # Temporal smoothing
                 if (pre_right_m is not None):
                     right_avg_m = prev_ratio * pre_right_m + (1 - prev_ratio) * right_avg_m
                     right_avg_b = prev_ratio * pre_right_b + (1 - prev_ratio) * right_avg_b
-                # Get the x value for the top point
                 right_x_min = (img.shape[0] * 3 / 5 - right_avg_b) / right_avg_m
-                # Get the x value for the bottom point (draw all the way to bottom)
                 right_x_max = (img.shape[0] - right_avg_b) / right_avg_m
-                # Draw the right line
                 cv2.line(img, (int(right_x_min), int(img.shape[0] * 3 / 5)),
                          (int(right_x_max), img.shape[0]), color, thickness)
                 pre_right_m = right_avg_m
                 pre_right_b = right_avg_b
 
 
-    def hough_lines(self,img, rho, theta, threshold, min_line_len, max_line_gap):
+    def lane_lines(self,img, rho, theta, threshold, min_line_len, max_line_gap):
         lines = cv2.HoughLinesP(img, rho, theta, threshold, np.array([]),
                                 minLineLength=min_line_len, maxLineGap=max_line_gap)
         line_img = np.zeros([img.shape[0], img.shape[1], 3], dtype=np.uint8)
         self.draw_lines(line_img, lines)
         return line_img
-
-
-
 
     def find_lanes(self,image):
         low_threshold = 50
@@ -135,43 +120,40 @@ class DetectLane:
         cv2.fillPoly(mask, vertices, ignore_mask_color)
         masked_edges = cv2.bitwise_and(edges, mask)
 
-        line_image = self.hough_lines(masked_edges, rho, theta, threshold, min_line_len, max_line_gap)
+        line_image = self.lane_lines(masked_edges, rho, theta, threshold, min_line_len, max_line_gap)
         lines_edges = self.weighted_img(line_image, image)
         return lines_edges
-
 
     def weighted_img(self,img, initial_img, α=0.8, β=1.0, λ=0.0):
         return cv2.addWeighted(initial_img, α, img, β, λ)
 
 
 
+# def main():
+#     cap = cv2.VideoCapture('test_vid2.mp4')
+
+#     while True:
+#         ret, frame = cap.read()
+#         if not ret:
+#             break
+
+#         lobj = DetectLane()
+#         lines_edges = lobj.find_lanes(frame)
+#         cv2.imshow('frame', lines_edges)
 
 
-def main():
-    cap = cv2.VideoCapture('test_vid2.mp4')
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        lobj = DetectLane()
-        lines_edges = lobj.find_lanes(frame)
-        cv2.imshow('frame', lines_edges)
-
-
-        k = cv2.waitKey(5) & 0xFF
-        if k == 27:
-            break
-    cv2.destroyAllWindows()
-    cap.release()
+#         k = cv2.waitKey(5) & 0xFF
+#         if k == 27:
+#             break
+#     cv2.destroyAllWindows()
+#     cap.release()
 
 
 
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
 #
 # import cv2
