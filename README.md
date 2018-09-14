@@ -2,8 +2,8 @@
 
 
 ## Packages needed
-1. OpenCv
-2.Numpy
+1. OpenCV
+2. Numpy
 
 
 ## Run the file
