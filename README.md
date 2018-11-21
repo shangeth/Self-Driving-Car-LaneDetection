@@ -1,24 +1,5 @@
-# Self-Driving-Car-LaneDetection
+# Self-Driving Car Engineer Nanodegree
 
 
-## Packages needed
-1. OpenCV
-2. Numpy
-
-
-## Run the file
-
-```console
-terminal@linux:~$ python detect_lanes_video.py
-```
-
-
-
-## Demo
-[[Demo]](https://youtu.be/bqIiZxqWTKo)
-
-
-## Screenshot
-![Output](img.png)
-
+## Project: **Finding Lane Lines on the Road** 
 
